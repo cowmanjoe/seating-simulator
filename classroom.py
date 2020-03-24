@@ -18,6 +18,6 @@ class Classroom:
     def sit_at(self, position: Position):
         self._layout[position.y, position.x] = 1
 
-
-
+    def get_seat(self, position: Position) -> int:
+        return self._layout[position.y, position.x]
 

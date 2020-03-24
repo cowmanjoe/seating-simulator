@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 import numpy as np
 
@@ -17,14 +17,21 @@ class Person:
 
     def sit_down(self, classroom: Classroom):
         seat_position = self._choose_seat(classroom)
-        classroom.sit_at(seat_position)
 
-    def _choose_seat(self, classroom: Classroom) -> Position:
+        if seat_position:
+            classroom.sit_at(seat_position)
+
+    def _choose_seat(self, classroom: Classroom) -> Optional[Position]:
         costs = self._calculate_costs(classroom)
-        min_cost_index = costs.argmin()
-        cost_position = np.unravel_index(min_cost_index, costs.shape)
+        flattened_costs = costs.flatten()
+        cost_indices_sorted = np.argsort(flattened_costs)
+        for index in cost_indices_sorted:
+            unraveled = np.unravel_index(index, costs.shape)
+            position = Position(unraveled[1], unraveled[0])
+            if classroom.get_seat(position) == 0:
+                return position
 
-        return Position(cost_position[0], cost_position[1])
+        return None
 
     def _calculate_costs(self, classroom: Classroom) -> np.ndarray:
         costs = np.zeros((classroom.length, classroom.width))
