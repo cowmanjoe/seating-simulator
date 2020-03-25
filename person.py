@@ -3,8 +3,13 @@ from typing import List, Optional
 import numpy as np
 
 from classroom import Classroom
+from rule_configuration import RuleConfiguration
 from rules import Rule
 from util import Position
+
+
+def create_person(rule_configurations: List[RuleConfiguration]):
+    return Person([config.create_rule() for config in rule_configurations])
 
 
 class Person:
