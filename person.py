@@ -8,11 +8,9 @@ from util import Position
 
 
 class Person:
-    position: Position
     rules: List[Rule]
 
-    def __init__(self, position: Position, rules: List[Rule]):
-        self.position = position
+    def __init__(self, rules: List[Rule]):
         self.rules = rules
 
     def sit_down(self, classroom: Classroom):
@@ -38,7 +36,7 @@ class Person:
         for y in range(classroom.length):
             for x in range(classroom.width):
                 for rule in self.rules:
-                    costs[y, x] += rule.calculate_cost(self.position, Position(x, y), classroom)
+                    costs[y, x] += rule.calculate_cost(Position(x, y), classroom)
 
         return costs
 

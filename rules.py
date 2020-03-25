@@ -6,7 +6,7 @@ from util import Position
 
 class Rule:
 
-    def calculate_cost(self, person_position: Position, seat_position: Position, classroom: Classroom) -> float:
+    def calculate_cost(self, seat_position: Position, classroom: Classroom) -> float:
         pass
 
 
@@ -18,7 +18,7 @@ class FrontOfClassRule(Rule):
 
         self._weight = weight
 
-    def calculate_cost(self, person_position: Position, seat_position: Position, classroom: Classroom) -> float:
+    def calculate_cost(self, seat_position: Position, classroom: Classroom) -> float:
         return seat_position.y * self._weight
 
 
@@ -30,7 +30,7 @@ class FarFromStrangersRule(Rule):
         self._weight = weight
         self._neighbourhood = neighbourhood
 
-    def calculate_cost(self, person_position: Position, seat_position: Position, classroom: Classroom) -> float:
+    def calculate_cost(self, seat_position: Position, classroom: Classroom) -> float:
         cost = 0
 
         for i in range(-self._neighbourhood, self._neighbourhood + 1):
@@ -47,3 +47,14 @@ class FarFromStrangersRule(Rule):
                     cost += self._weight / math.sqrt(i ** 2 + j ** 2)
 
         return cost
+
+
+class CloseToEntranceRule(Rule):
+    _weight: float
+
+    def __init__(self, weight: float):
+        self._weight = weight
+
+    def calculate_cost(self, seat_position: Position, classroom: Classroom) -> float:
+        return self._weight * math.sqrt((classroom.entrance_position.x - seat_position.x) ** 2 +
+                         (classroom.entrance_position.y - seat_position.y) ** 2)
