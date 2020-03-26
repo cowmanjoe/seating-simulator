@@ -1,8 +1,9 @@
-import matplotlib.pyplot as plt
-from matplotlib.animation import ArtistAnimation
+from simulation_configuration import SimulationConfiguration
+from simulation import Simulation
 
 from classroom import Classroom
-from person import Person, create_person
+from friend_graph import FriendGraph
+from person import create_person
 from rule_configuration import RuleConfiguration, RandomFloatRuleParameter, RandomIntRuleParameter
 from rules import FrontOfClassRule, FarFromStrangersRule, CloseToEntranceRule
 from util import Position
@@ -11,7 +12,7 @@ STEPS = 100
 
 
 if __name__ == '__main__':
-    classroom = Classroom(16, 12, entrance_position=Position(25, 15))
+    classroom = Classroom(16, 14, entrance_position=Position(8, 15))
     images = []
 
     rule_configurations = [
@@ -29,19 +30,12 @@ if __name__ == '__main__':
         )
     ]
 
-
+    people = []
     for i in range(STEPS):
-        person = create_person(rule_configurations)
-        person.sit_down(classroom)
+        people.append(create_person(rule_configurations))
 
+    friend_graph = FriendGraph([person.id for person in people])
+    friend_graph.randomize_friendships(300)
 
-        x = plt.imshow(classroom._layout, animated=True)
-        images.append([x])
-        print(f"Finished step {i}")
-
-    fig = plt.figure("animation")
-
-
-    animation = ArtistAnimation(fig, images, repeat_delay=0, blit=True)
-    plt.show()
-
+    simulation = Simulation(SimulationConfiguration(classroom, friend_graph, people))
+    simulation.run_simulation()

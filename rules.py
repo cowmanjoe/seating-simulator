@@ -1,12 +1,11 @@
 import math
 
-from classroom import Classroom
+from simulation_configuration import SimulationConfiguration
 from util import Position
 
 
 class Rule:
-
-    def calculate_cost(self, seat_position: Position, classroom: Classroom) -> float:
+    def calculate_cost(self, seat_position: Position, simulation_configuration: SimulationConfiguration, person_id: int) -> float:
         pass
 
 
@@ -18,7 +17,7 @@ class FrontOfClassRule(Rule):
 
         self._weight = weight
 
-    def calculate_cost(self, seat_position: Position, classroom: Classroom) -> float:
+    def calculate_cost(self, seat_position: Position, simulation_configuration: SimulationConfiguration, person_id: int) -> float:
         return seat_position.y * self._weight
 
 
@@ -30,7 +29,7 @@ class FarFromStrangersRule(Rule):
         self._weight = weight
         self._neighbourhood = neighbourhood
 
-    def calculate_cost(self, seat_position: Position, classroom: Classroom) -> float:
+    def calculate_cost(self, seat_position: Position, simulation_configuration: SimulationConfiguration, person_id: int) -> float:
         cost = 0
 
         for i in range(-self._neighbourhood, self._neighbourhood + 1):
@@ -40,10 +39,20 @@ class FarFromStrangersRule(Rule):
 
                 x = seat_position.x + i
                 y = seat_position.y + j
-                if x < 0 or x >= classroom.width or y < 0 or y >= classroom.length:
+                if (
+                        x < 0 or x >= simulation_configuration.classroom.width or
+                        y < 0 or y >= simulation_configuration.classroom.length
+                ):
                     continue
 
-                if classroom.get_seat(Position(x, y)):
+                id_seated_at = simulation_configuration.classroom.get_id_seated_at(Position(x, y))
+
+                if id_seated_at is not None and simulation_configuration.friend_graph.are_friends(person_id, id_seated_at):
+                    print(f"Found friendship between {person_id, id_seated_at}!")
+                    continue
+
+
+                if simulation_configuration.classroom.get_seat(Position(x, y)):
                     cost += self._weight / math.sqrt(i ** 2 + j ** 2)
 
         return cost
@@ -55,6 +64,6 @@ class CloseToEntranceRule(Rule):
     def __init__(self, weight: float):
         self._weight = weight
 
-    def calculate_cost(self, seat_position: Position, classroom: Classroom) -> float:
-        return self._weight * math.sqrt((classroom.entrance_position.x - seat_position.x) ** 2 +
-                         (classroom.entrance_position.y - seat_position.y) ** 2)
+    def calculate_cost(self, seat_position: Position, simulation_configuration: SimulationConfiguration, person_id: int) -> float:
+        return self._weight * math.sqrt((simulation_configuration.classroom.entrance_position.x - seat_position.x) ** 2 +
+                                        (simulation_configuration.classroom.entrance_position.y - seat_position.y) ** 2)
