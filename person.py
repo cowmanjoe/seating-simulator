@@ -14,6 +14,7 @@ def create_person(rule_configurations: List[RuleConfiguration]):
 
 
 class Person:
+    # id should always be a positive integer
     id: int
     rules: List[Rule]
 
@@ -34,7 +35,7 @@ class Person:
         for index in cost_indices_sorted:
             unraveled = np.unravel_index(index, costs.shape)
             position = Position(unraveled[1], unraveled[0])
-            if simulation_config.classroom.get_seat(position) == 0:
+            if not simulation_config.classroom.is_seat_occupied(position):
                 return position
 
         return None

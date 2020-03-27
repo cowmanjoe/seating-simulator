@@ -15,7 +15,7 @@ class Simulation:
 
         for i, person in enumerate(self.configuration.people):
             person.sit_down(self.configuration)
-            x = plt.imshow(self.configuration.classroom._layout, animated=True)
+            x = plt.imshow(self.configuration.classroom.get_occupancy_matrix(), animated=True)
             images.append([x])
             print(f"Finished step {i}")
 

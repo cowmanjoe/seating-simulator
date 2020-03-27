@@ -51,8 +51,7 @@ class FarFromStrangersRule(Rule):
                     print(f"Found friendship between {person_id, id_seated_at}!")
                     continue
 
-
-                if simulation_configuration.classroom.get_seat(Position(x, y)):
+                if simulation_configuration.classroom.is_seat_occupied(Position(x, y)):
                     cost += self._weight / math.sqrt(i ** 2 + j ** 2)
 
         return cost
