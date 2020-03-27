@@ -58,6 +58,32 @@ class FarFromStrangersRule(Rule):
         return cost
 
 
+class NextToFriendsRule(Rule):
+    _weight: float
+
+    def __init__(self, weight: float):
+        self._weight = weight
+
+    def calculate_cost(self, seat_position: Position, simulation_configuration: SimulationConfiguration, person_id: int) -> float:
+        cost = 0
+
+        left_adjacent_x = seat_position.x - 1
+        if left_adjacent_x >= 0:
+            left_adjacent_id = simulation_configuration.classroom.get_id_seated_at(Position(left_adjacent_x, seat_position.y))
+            if left_adjacent_id and simulation_configuration.friend_graph.are_friends(person_id, left_adjacent_id):
+                print(f"Found friendship between {person_id, left_adjacent_id}")
+                cost -= self._weight
+
+        right_adjacent_x = seat_position.x + 1
+        if right_adjacent_x < simulation_configuration.classroom.width:
+            right_adjacent_id = simulation_configuration.classroom.get_id_seated_at(Position(right_adjacent_x, seat_position.y))
+            if right_adjacent_id and simulation_configuration.friend_graph.are_friends(person_id, right_adjacent_id):
+                print(f"Found friendship between {person_id, right_adjacent_id}")
+                cost -= self._weight
+
+        return cost
+
+
 class CloseToEntranceRule(Rule):
     _weight: float
 

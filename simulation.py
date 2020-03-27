@@ -21,6 +21,6 @@ class Simulation:
 
         fig = plt.figure("animation")
 
-        animation = ArtistAnimation(fig, images, interval=50, repeat_delay=0, blit=True)
+        animation = ArtistAnimation(fig, images, interval=200, repeat_delay=0, blit=True)
         plt.show(animation)
 
