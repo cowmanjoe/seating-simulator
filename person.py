@@ -35,7 +35,7 @@ class Person:
         for index in cost_indices_sorted:
             unraveled = np.unravel_index(index, costs.shape)
             position = Position(unraveled[1], unraveled[0])
-            if not simulation_config.classroom.is_seat_occupied(position):
+            if  simulation_config.classroom.is_seat_available(position):
                 return position
 
         return None
@@ -48,5 +48,3 @@ class Person:
                     costs[y, x] += rule.calculate_cost(Position(x, y), simulation_configuration, self.id)
 
         return costs
-
-

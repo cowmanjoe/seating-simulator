@@ -8,13 +8,13 @@ from rule_configuration import RuleConfiguration, RandomFloatRuleParameter, Rand
 from rules import FrontOfClassRule, FarFromStrangersRule, CloseToEntranceRule, NextToFriendsRule
 from util import Position
 
-NUM_PEOPLE = 200
+NUM_PEOPLE = 150
 NUM_FRIENDSHIPS = 100
 
-CLASS_WIDTH = 25
-CLASS_HEIGHT = 15
+CLASS_WIDTH = 33
+CLASS_HEIGHT = 20
 
-ENTRANCE_POSITION = Position(12, 15)
+ENTRANCE_POSITION = Position(16, 19)
 
 FRONT_OF_CLASS_WEIGHT_LOWER = 0.1
 FRONT_OF_CLASS_WEIGHT_UPPER = 1
