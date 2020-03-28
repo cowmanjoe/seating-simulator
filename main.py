@@ -14,7 +14,7 @@ NUM_FRIENDSHIPS = 100
 CLASS_WIDTH = 33
 CLASS_HEIGHT = 20
 
-ENTRANCE_POSITION = Position(16, 19)
+ENTRANCE_POSITIONS = [Position(0, 9), Position(32, 9), Position(16, 19)]
 
 FRONT_OF_CLASS_WEIGHT_LOWER = 0.1
 FRONT_OF_CLASS_WEIGHT_UPPER = 1
@@ -32,7 +32,7 @@ NEXT_TO_FRIENDS_WEIGHT_UPPER = 3
 
 
 if __name__ == '__main__':
-    classroom = Classroom(CLASS_WIDTH, CLASS_HEIGHT, entrance_position=ENTRANCE_POSITION)
+    classroom = Classroom(CLASS_WIDTH, CLASS_HEIGHT, entrance_positions=ENTRANCE_POSITIONS)
     images = []
 
     rule_configurations = [

@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 import numpy as np
 
@@ -15,13 +15,16 @@ class Classroom:
 
     width: int
     length: int
-    entrance_position: Position
+    entrance_positions: List[Position]
 
-    def __init__(self, width: int, length: int, entrance_position: Position):
-        self._seating = self._init_seating(width, length, entrance_position)
+    def __init__(self, width: int, length: int, entrance_positions: Optional[List[Position]] = None):
+        if not entrance_positions:
+            entrance_positions = [Position(0, 0)]
+
+        self._seating = self._init_seating(width, length, entrance_positions)
         self.width = width
         self.length = length
-        self.entrance_position = entrance_position
+        self.entrance_positions = entrance_positions
 
     def sit_at(self, position: Position, person_id: int):
         self._set_seat(position, person_id)
@@ -38,9 +41,10 @@ class Classroom:
     def get_occupancy_matrix(self) -> np.ndarray:
         return np.minimum(self._seating, np.full_like(self._seating, 1))
 
-    def _init_seating(self, width: int, length: int, entrance_position: Position) -> np.ndarray:
-        assert 0 <= entrance_position.x < width
-        assert 0 <= entrance_position.y < length
+    def _init_seating(self, width: int, length: int, entrance_positions: List[Position]) -> np.ndarray:
+        for entrance_position in entrance_positions:
+            assert 0 <= entrance_position.x < width
+            assert 0 <= entrance_position.y < length
 
         seating = np.zeros((length, width), dtype=int)
 
@@ -49,7 +53,8 @@ class Classroom:
         seating[0] = np.full_like(seating[0], NO_SEAT)
         seating[length - 1] = np.full_like(seating[0], NO_SEAT)
 
-        seating[entrance_position.y, entrance_position.x] = ENTRANCE
+        for entrance_position in entrance_positions:
+            seating[entrance_position.y, entrance_position.x] = ENTRANCE
 
         return seating
 

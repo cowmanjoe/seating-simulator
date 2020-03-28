@@ -3,6 +3,7 @@ from typing import List, Dict
 
 import numpy as np
 
+
 class FriendGraph:
     _num_people: int
     _adj_matrix: np.ndarray

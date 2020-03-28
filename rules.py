@@ -1,4 +1,7 @@
 import math
+from typing import List
+
+import numpy as np
 
 from simulation_configuration import SimulationConfiguration
 from util import Position
@@ -90,5 +93,16 @@ class CloseToEntranceRule(Rule):
         self._weight = weight
 
     def calculate_cost(self, seat_position: Position, simulation_configuration: SimulationConfiguration, person_id: int) -> float:
-        return self._weight * math.sqrt((simulation_configuration.classroom.entrance_position.x - seat_position.x) ** 2 +
-                                        (simulation_configuration.classroom.entrance_position.y - seat_position.y) ** 2)
+        if not simulation_configuration.classroom.entrance_positions:
+            return 0
+
+        return self._weight * self._get_distance_to_closest_entrance(
+            seat_position,
+            simulation_configuration.classroom.entrance_positions
+        )
+
+    def _get_distance_to_closest_entrance(self, seat_position: Position, entrance_positions: List[Position]) -> float:
+        distances = [math.sqrt((seat_position.x - entrance_position.x) ** 2 + (seat_position.y - entrance_position.y) ** 2)
+                     for entrance_position in entrance_positions]
+
+        return sorted(distances)[0]
